@@ -194,6 +194,8 @@ void GameController::load() {
     }
 }
 
+const int GameController::ARCHIVES_MAX = 5;
+
 const std::string GameController::FINISH = "Finish! Press R to play again.";
 const std::string GameController::SOLVABLE = "Able to solve!";
 const std::string GameController::UNSOLVABLE = "No solution! Press any key to restart.";
@@ -201,4 +203,3 @@ const std::string GameController::ENTER_ARCHIVE_NAME = "Please enter the name: "
 const std::string GameController::SAVED = "Saved successfully!";
 const std::string GameController::ARCHIVE_NOT_FOUND = "Archive not found. Please check your name.";
 const std::string GameController::NAME_USED = "This name has already been used.";
-const int GameController::ARCHIVES_MAX = 5;
