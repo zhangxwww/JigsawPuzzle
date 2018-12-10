@@ -1,4 +1,5 @@
 #include "JigsawPuzzle.h"
+#include "Archive.h"
 #include "Util.h"
 
 #include <iostream>
@@ -8,8 +9,8 @@
 JigsawPuzzle::JigsawPuzzle(
     const int row, const int col)
 
-    : row(row), col(col), matrix(nullptr), 
-    originMatrix(nullptr), 
+    : row(row), col(col), matrix(nullptr),
+    originMatrix(nullptr),
     curBlankRow(row - 1), curBlankCol(col - 1) {
 
     matrix = new int[row * col];
@@ -20,7 +21,24 @@ JigsawPuzzle::JigsawPuzzle(
     }
     matrix[row * col - 1] = -1;
     originMatrix[row * col - 1] = -1;
-    
+
+}
+
+JigsawPuzzle::JigsawPuzzle(const Archive & archive)
+    : row(archive.row), col(archive.col), matrix(nullptr),
+    originMatrix(nullptr), curBlankRow(0), curBlankCol(0) {
+
+    matrix = new int[row * col];
+    originMatrix = new int[row * col];
+
+    for (int i = 0; i < row * col; i++) {
+        matrix[i] = archive.matrix[i];
+        originMatrix[i] = archive.matrix[i];
+        if (matrix[i] == -1) {
+            curBlankRow = i / col;
+            curBlankCol = i % col;
+        }
+    }
 }
 
 JigsawPuzzle::~JigsawPuzzle() {
@@ -56,7 +74,7 @@ void JigsawPuzzle::move(const char c) {
     case 'W':
         if (curBlankRow > 0) {
             curBlankRow--;
-            swap<int>(matrix[curBlankRow * col + curBlankCol], 
+            swap<int>(matrix[curBlankRow * col + curBlankCol],
                 matrix[(curBlankRow + 1) * col + curBlankCol]);
         }
         break;
@@ -105,8 +123,12 @@ void JigsawPuzzle::restart() {
 
 bool JigsawPuzzle::feasibilityAnalysis() const {
     int inversionPair = 0;
-    for (int i = 0; i < row * col - 2; i++) {
-        for (int j = i + 1; j < row * col - 1; j++) {
+    for (int i = 0; i < row * col - 1; i++) {
+        for (int j = i + 1; j < row * col; j++) {
+            if (matrix[i] == -1
+                || matrix[j] == -1) {
+                continue;
+            }
             if (matrix[i] > matrix[j]) {
                 inversionPair++;
             }

@@ -1,9 +1,12 @@
 #ifndef JIGSAW_PUZZLE
 #define JIGSAW_PUZZLE
 
+class Archive;
+
 class JigsawPuzzle {
 public:
     JigsawPuzzle(const int row, const int col);
+    JigsawPuzzle(const Archive & archive);
     ~JigsawPuzzle();
 
     void shuffle();

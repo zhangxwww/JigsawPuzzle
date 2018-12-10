@@ -62,6 +62,7 @@ void GameController::mainLoop() {
             case 'D':
                 // move
                 puzzle->move(cmd);
+                printer->clearText();
                 if (puzzle->isFinished()) {
                     printer->printText(FINISH);
                 }
@@ -84,6 +85,7 @@ void GameController::mainLoop() {
                 break;
             case 'O':
                 // load
+                load();
                 break;
             case 'F':
                 // auto finish
@@ -118,7 +120,14 @@ void GameController::checkSolvable() const {
 }
 
 void GameController::printIntroduction() const {
-    // TODO
+    std::cout << "Welcome to Jigsaw puzzle!" << std::endl
+        << "Press WASD to move" << std::endl
+        << "Press R to restart" << std::endl
+        << "Press G to save current image" << std::endl
+        << "Press I to save current progress" << std::endl
+        << "Press O to load previous progress" << std::endl
+        << "Press F to auto finish" << std::endl
+        << "Press P to exit" << std::endl;
 }
 
 void GameController::setDifficulty() {
@@ -140,11 +149,17 @@ void GameController::setDifficulty() {
 }
 
 void GameController::save() {
-    // printer->clearText();
-    // std::cout << "Please enter the name: ";
     printer->printText(ENTER_ARCHIVE_NAME);
     std::string name;
     std::cin >> name;
+    for (int i = 0; i < ARCHIVES_MAX; i++) {
+        if (archives[i] != nullptr
+            && archives[i]->name == name) {
+
+            printer->printText(NAME_USED);
+            return;
+        }
+    }
     if (archives[archiveCount % ARCHIVES_MAX] != nullptr) {
         delete archives[archiveCount % ARCHIVES_MAX];
         archives[archiveCount % ARCHIVES_MAX] = nullptr;
@@ -156,9 +171,34 @@ void GameController::save() {
     printer->printText(SAVED);
 }
 
+void GameController::load() {
+    printer->printText(ENTER_ARCHIVE_NAME);
+    std::string name;
+    std::cin >> name;
+    bool found = false;
+    for (int i = 0; i < ARCHIVES_MAX; i++) {
+        if (archives[i] != nullptr 
+            && archives[i]->name == name) {
+
+            if (puzzle != nullptr) {
+                delete puzzle;
+                puzzle = nullptr;
+            }
+            puzzle = new JigsawPuzzle(*archives[i]);
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        printer->printText(ARCHIVE_NOT_FOUND);
+    }
+}
+
 const std::string GameController::FINISH = "Finish! Press R to play again.";
-const std::string GameController::SOLVABLE = "Able to solve!                        ";
+const std::string GameController::SOLVABLE = "Able to solve!";
 const std::string GameController::UNSOLVABLE = "No solution! Press any key to restart.";
 const std::string GameController::ENTER_ARCHIVE_NAME = "Please enter the name: ";
 const std::string GameController::SAVED = "Saved successfully!";
+const std::string GameController::ARCHIVE_NOT_FOUND = "Archive not found. Please check your name.";
+const std::string GameController::NAME_USED = "This name has already been used.";
 const int GameController::ARCHIVES_MAX = 5;

@@ -21,7 +21,7 @@ private:
     // read bmp
     void setDifficulty();
     void save();
-    // load
+    void load();
 
     std::string bmpFileName;
     JigsawPuzzle * puzzle;
@@ -34,6 +34,8 @@ private:
     static const std::string UNSOLVABLE;
     static const std::string ENTER_ARCHIVE_NAME;
     static const std::string SAVED;
+    static const std::string NAME_USED;
+    static const std::string ARCHIVE_NOT_FOUND;
     static const int ARCHIVES_MAX;
 };
 

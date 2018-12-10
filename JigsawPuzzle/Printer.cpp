@@ -29,7 +29,7 @@ void Printer::printText(const std::string & text) {
 
 void Printer::clearText() {
     setCurRow(row);
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 25; i++) {
         std::cout << "                                                        "
             << std::endl;
     }  
