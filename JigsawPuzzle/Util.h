@@ -11,6 +11,6 @@ void swap(T & t1, T & t2) {
     t2 = temp;
 }
 
-void clearScreen();
+void setCurRow(const int row);
 
 #endif // !UTIL

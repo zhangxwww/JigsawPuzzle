@@ -10,13 +10,17 @@ JigsawPuzzle::JigsawPuzzle(
 
     : row(row), col(col), matrix(nullptr), 
     originMatrix(nullptr), 
-    curBlankRow(0), curBlankCol(0) {
+    curBlankRow(row - 1), curBlankCol(col - 1) {
 
     matrix = new int[row * col];
+    originMatrix = new int[row * col];
     for (int i = 0; i < row * col - 1; i++) {
         matrix[i] = i;
+        originMatrix[i] = i;
     }
     matrix[row * col - 1] = -1;
+    originMatrix[row * col - 1] = -1;
+    
 }
 
 JigsawPuzzle::~JigsawPuzzle() {
@@ -40,7 +44,6 @@ void JigsawPuzzle::shuffle() {
         unsigned r = u(e) % (row*col - 1 - i) + i;
         swap<int>(matrix[i], matrix[r]);
     }
-    originMatrix = new int[row * col];
     for (int i = 0; i < row * col; i++) {
         originMatrix[i] = matrix[i];
     }
@@ -102,8 +105,8 @@ void JigsawPuzzle::restart() {
 
 bool JigsawPuzzle::feasibilityAnalysis() const {
     int inversionPair = 0;
-    for (int i = 0; i < row * col - 1; i++) {
-        for (int j = i + 1; j < row * col; j++) {
+    for (int i = 0; i < row * col - 2; i++) {
+        for (int j = i + 1; j < row * col - 1; j++) {
             if (matrix[i] > matrix[j]) {
                 inversionPair++;
             }

@@ -13,8 +13,6 @@ public:
     
     bool feasibilityAnalysis() const;
     /*
-    void save();
-    void load();
     void autoFinish()
     */
     int * getMatrix() const;
