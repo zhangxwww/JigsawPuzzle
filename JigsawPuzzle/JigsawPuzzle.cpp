@@ -58,10 +58,12 @@ void JigsawPuzzle::shuffle() {
         matrix[i] = i;
     }
     matrix[row * col - 1] = -1;
+    // 对每一个数，依次交换其与其之后的随机位置上的数
     for (int i = 0; i < row * col - 1; i++) {
         unsigned r = u(e) % (row*col - 1 - i) + i;
         swap<int>(matrix[i], matrix[r]);
     }
+    // 用originMatrix保存打乱后的状态
     for (int i = 0; i < row * col; i++) {
         originMatrix[i] = matrix[i];
     }
@@ -123,6 +125,7 @@ void JigsawPuzzle::restart() {
 
 bool JigsawPuzzle::feasibilityAnalysis() const {
     int inversionPair = 0;
+    // 计算逆序对数，-1除外，有解<=>逆序对数为偶数
     for (int i = 0; i < row * col - 1; i++) {
         for (int j = i + 1; j < row * col; j++) {
             if (matrix[i] == -1

@@ -36,20 +36,31 @@ GameController::~GameController() {
 }
 
 void GameController::start() {
+    // 打印游戏介绍
     printIntroduction();
+    // 设置难度
     setDifficulty();
     printer = new Printer(puzzle->getRow(), puzzle->getCol());
+    // 打乱
     puzzle->shuffle();
+    // 进入游戏主循环
     mainLoop();
 }
 
 void GameController::mainLoop() {
+    // 绘制矩阵，清空矩阵下的文字
     printer->printMatrix(puzzle->getMatrix());
     printer->clearText();
+    // 检查是否有解
     checkSolvable();
     bool exit = false;
     while (!exit) {
         char cmd;
+        /**
+         * !!!!!! 【醒目】 !!!!!!
+         * _kbhit()与 _getch()以及后面的 _getwch()几个函数在非vs下可能无法正确编译
+         * 可以将二者分别改为 kbhit(), getch()以及 getwch()
+         */
         if (_kbhit()) {
             cmd = _getch();
             if (cmd >= 'a' && cmd <= 'z') {
@@ -63,12 +74,14 @@ void GameController::mainLoop() {
                 // move
                 puzzle->move(cmd);
                 printer->clearText();
+                // 判断是否完成复原
                 if (puzzle->isFinished()) {
                     printer->printText(FINISH);
                 }
                 break;
             case 'R':
-                // restart             
+                // restart
+                // 如果无解，或是已经完成，则先打乱，再重新开始
                 if (!puzzle->feasibilityAnalysis()
                     || puzzle->isFinished()) {
                     puzzle->shuffle();
@@ -106,10 +119,12 @@ void GameController::mainLoop() {
 void GameController::checkSolvable() const {
     printer->printMatrix(puzzle->getMatrix());
     while (true) {
+        // 当前状态有解
         if (puzzle->feasibilityAnalysis()) {
             printer->printText(SOLVABLE);
             break;
         }
+        // 无解，按任意键重新打乱
         else {
             printer->printText(UNSOLVABLE);
             char cmd = _getwch();
@@ -138,6 +153,7 @@ void GameController::setDifficulty() {
         std::cin >> row;
         std::cout << "Please enter columns : ";
         std::cin >> col;
+        // 过小的矩阵是没有意义的
         if (row < 2 || col < 2 || row * col < 6) {
             std::cout << "Invalid input, please try again."
                 << std::endl;
@@ -152,6 +168,7 @@ void GameController::save() {
     printer->printText(ENTER_ARCHIVE_NAME);
     std::string name;
     std::cin >> name;
+    // 寻找是否已经存在同名的存档
     for (int i = 0; i < ARCHIVES_MAX; i++) {
         if (archives[i] != nullptr
             && archives[i]->name == name) {
@@ -160,6 +177,7 @@ void GameController::save() {
             return;
         }
     }
+    // 存档如果超过ARCHIVES_MAX, 则会覆盖最早的存档，类似于一个队列
     if (archives[archiveCount % ARCHIVES_MAX] != nullptr) {
         delete archives[archiveCount % ARCHIVES_MAX];
         archives[archiveCount % ARCHIVES_MAX] = nullptr;
@@ -177,6 +195,7 @@ void GameController::load() {
     std::cin >> name;
     bool found = false;
     for (int i = 0; i < ARCHIVES_MAX; i++) {
+        // 寻找给定名字的存档
         if (archives[i] != nullptr 
             && archives[i]->name == name) {
 
