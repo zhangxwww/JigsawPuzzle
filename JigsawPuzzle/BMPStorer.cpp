@@ -49,8 +49,10 @@ void BMPStorer::refactor(int * matrix) {
         nG[i] = 0;
         nR[i] = 0;
     }
+    // 块的宽、高
     int deltaWidth = width / col;
     int deltaHeight = height / row;
+    // 新的图像的宽、高
     int newWidth = deltaWidth * col;
     int newHeight = deltaHeight * row;
     for (int r = 0; r < row; r++) {
@@ -59,10 +61,13 @@ void BMPStorer::refactor(int * matrix) {
             if (order == -1) {
                 continue;
             }
+            // 初始位置
             int preCol = order % col;
             int preRow = order / col;
+            // 正在绘制的块的左下坐标
             int newLeftDownPixY = (row - r - 1) * deltaHeight;
             int newLeftDownPixX = c * deltaWidth;
+            // 正在绘制的块在原图中的左下坐标
             int preLeftDownPixY = (row - preRow - 1) * deltaHeight;
             int preLeftDownPixX = preCol * deltaWidth;
             for (int y = 0; y < deltaHeight; y++) {
@@ -90,6 +95,7 @@ void BMPStorer::refactor(int * matrix) {
 void BMPStorer::drawBounds() {
     int deltaWidth = width / col;
     int deltaHeight = height / row;
+    // 绘制所有竖线
     for (int c = 1; c < col; c++) {
         for (int y = 0; y < height; y++) {
             B[y * width + c * deltaWidth] = 0;
@@ -97,6 +103,7 @@ void BMPStorer::drawBounds() {
             R[y * width + c * deltaWidth] = 0;
         }
     }
+    // 绘制所有横线
     for (int r = 1; r < row; r++) {
         for (int x = 0; x < width; x++) {
             B[r * deltaHeight * width + x] = 0;

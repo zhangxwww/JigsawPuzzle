@@ -39,9 +39,15 @@ private:
     void printIntroduction() const;
 
 
+    /**
+     * 获取bmp图片路径
+     */
     void getBMPfileName();
 
 
+    /**
+     * 保存bmp文件
+     */
     void saveBMPfile();
 
 
@@ -68,7 +74,7 @@ private:
     /* 用于控制屏幕上显示的内容 */
     Printer * printer;
 
-    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+    /* 用于保存与操作bmp文件 */
     BMPStorer * storer;
 
     /* 所有的存档 */
