@@ -33,6 +33,9 @@
     <ClCompile Include="Archive.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BMPStorer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameController.h">
@@ -48,6 +51,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Archive.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BMPStorer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

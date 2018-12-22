@@ -6,6 +6,7 @@
 class JigsawPuzzle;
 class Printer;
 class Archive;
+class BMPStorer;
 
 /* 游戏流程控制 */
 class GameController {
@@ -38,7 +39,10 @@ private:
     void printIntroduction() const;
 
 
-    // TODO read bmp
+    void getBMPfileName();
+
+
+    void saveBMPfile();
 
 
     /**
@@ -58,14 +62,14 @@ private:
      */
     void load();
 
-    /* BMP图片的路径 */
-    std::string bmpFileName;
-
     /* 拼图 */
     JigsawPuzzle * puzzle;
 
     /* 用于控制屏幕上显示的内容 */
     Printer * printer;
+
+    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+    BMPStorer * storer;
 
     /* 所有的存档 */
     Archive ** archives;

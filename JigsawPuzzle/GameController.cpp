@@ -2,14 +2,16 @@
 #include "JigsawPuzzle.h"
 #include "Printer.h"
 #include "Archive.h"
+#include "BMPStorer.h"
 
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 #include <conio.h>
 
 GameController::GameController()
-    : bmpFileName(""), puzzle(nullptr),
-    printer(nullptr), archives(nullptr),
+    : puzzle(nullptr), printer(nullptr), 
+    storer(nullptr), archives(nullptr), 
     archiveCount(0) {
 
     archives = new Archive * [ARCHIVES_MAX];
@@ -33,11 +35,16 @@ GameController::~GameController() {
         }
         delete[] archives;
     }
+    if (storer != nullptr) {
+        delete storer;
+    }
 }
 
 void GameController::start() {
     // 打印游戏介绍
     printIntroduction();
+    // 输入图片路径
+    getBMPfileName();
     // 设置难度
     setDifficulty();
     printer = new Printer(puzzle->getRow(), puzzle->getCol());
@@ -91,6 +98,7 @@ void GameController::mainLoop() {
                 break;
             case 'G':
                 // save image
+                saveBMPfile();
                 break;
             case 'I':
                 // save
@@ -145,6 +153,40 @@ void GameController::printIntroduction() const {
         << "Press P to exit" << std::endl;
 }
 
+void GameController::getBMPfileName() {
+    std::cout << "Please enter the bmp file name :" << std::endl;
+    std::ifstream bmpFile;
+    std::string bmpFileName;
+    while (true) {
+        std::cin >> bmpFileName;
+        bmpFile.open(bmpFileName, std::ios::binary);
+        if (bmpFile) {
+            break;
+        }
+        std::cout << "File not found, please try again." << std::endl;
+    }
+    storer = new BMPStorer(bmpFile);
+    bmpFile.close();
+}
+
+void GameController::saveBMPfile() {
+    std::cout << "Please enter the file name :" << std::endl;
+    std::ofstream bmpFile;
+    std::string bmpFileName;
+    while (true) {
+        std::cin >> bmpFileName;
+        bmpFile.open(bmpFileName, std::ios::out | std::ios::binary);
+        if (bmpFile) {
+            break;
+        }
+        std::cout << "Can't save the image, please try again." << std::endl;
+    }
+    storer->refactor(puzzle->getMatrix());
+    storer->drawBounds();
+    storer->save(bmpFile);
+    bmpFile.close();
+}
+
 void GameController::setDifficulty() {
     int row;
     int col;
@@ -162,6 +204,7 @@ void GameController::setDifficulty() {
         break;
     }
     puzzle = new JigsawPuzzle(row, col);
+    storer->setSize(row, col);
 }
 
 void GameController::save() {

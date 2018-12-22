@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Archive.cpp" />
+    <ClCompile Include="BMPStorer.cpp" />
     <ClCompile Include="JigsawPuzzle.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="main.cpp" />
@@ -124,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archive.h" />
+    <ClInclude Include="BMPStorer.h" />
     <ClInclude Include="JigsawPuzzle.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="Printer.h" />
