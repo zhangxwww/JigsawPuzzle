@@ -44,7 +44,7 @@ void GameController::start() {
     // 打印游戏介绍
     printIntroduction();
     // 输入图片路径
-    getBMPfileName();
+    //getBMPfileName();
     // 设置难度
     setDifficulty();
     printer = new Printer(puzzle->getRow(), puzzle->getCol());
@@ -110,6 +110,7 @@ void GameController::mainLoop() {
                 break;
             case 'F':
                 // auto finish
+                puzzle->autoFinish();
                 break;
             case 'P':
                 // exit
@@ -165,7 +166,7 @@ void GameController::getBMPfileName() {
         }
         std::cout << "File not found, please try again." << std::endl;
     }
-    storer = new BMPStorer(bmpFile);
+    //storer = new BMPStorer(bmpFile);
     bmpFile.close();
 }
 
@@ -181,9 +182,9 @@ void GameController::saveBMPfile() {
         }
         std::cout << "Can't save the image, please try again." << std::endl;
     }
-    storer->refactor(puzzle->getMatrix());
-    storer->drawBounds();
-    storer->save(bmpFile);
+    //storer->refactor(puzzle->getMatrix());
+    //storer->drawBounds();
+    //storer->save(bmpFile);
     bmpFile.close();
 }
 
@@ -204,7 +205,7 @@ void GameController::setDifficulty() {
         break;
     }
     puzzle = new JigsawPuzzle(row, col);
-    storer->setSize(row, col);
+    //storer->setSize(row, col);
 }
 
 void GameController::save() {

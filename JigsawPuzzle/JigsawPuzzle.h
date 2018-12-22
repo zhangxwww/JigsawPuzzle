@@ -20,8 +20,16 @@ public:
     /**
      * 移动空白格
      * @param c: 移动方向
+     * @return : 成功移动则返回true, 否则false
      */
-    void move(const char c);
+    bool move(const char c);
+
+
+    /**
+     * 反向移动
+     * @param c: 移动方向
+     */
+    bool moveBack(const char c);
 
 
     /**
@@ -44,11 +52,12 @@ public:
     bool feasibilityAnalysis() const;
 
 
-    /* TODO
-    void autoFinish()
-    */
-
-
+    /**
+     * 自动完成
+     */
+    void autoFinish();
+    
+    
     int * getMatrix() const;
     const int getRow() const;
     const int getCol() const;
@@ -63,10 +72,16 @@ private:
 
     /* 玩家未移动过的矩阵，用于重新开始时回到最原始的状态 */
     int * originMatrix;
-
+    
     /* 当前空白格所在行列 */
     int curBlankRow;
     int curBlankCol;
+
+    /* 当前状态的哈希 */
+    long long hash() const;
+
+    /* 计算当前与目标状态的距离 */
+    int distance() const;
 };
 
 #endif // !JIGSAW_PUZZLE
