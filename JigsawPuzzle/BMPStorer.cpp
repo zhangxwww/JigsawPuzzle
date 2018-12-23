@@ -11,16 +11,22 @@ BMPStorer::BMPStorer(
     originB = new unsigned int[originWidth * originHeight];
     originG = new unsigned int[originWidth * originHeight];
     originR = new unsigned int[originWidth * originHeight];
+    drawingB = new unsigned int[originWidth * originHeight];
+    drawingG = new unsigned int[originWidth * originHeight];
+    drawingR = new unsigned int[originWidth * originHeight];
 
     bmpFile.seekg(54, std::ios::beg);
     unsigned char c;
     for (int i = 0; i < originWidth * originHeight; i++) {
         bmpFile.read((char *)& c, sizeof(unsigned char));
         originB[i] = c;
+        drawingB[i] = c;
         bmpFile.read((char *)& c, sizeof(unsigned char));
         originG[i] = c;
+        drawingG[i] = c;
         bmpFile.read((char *)& c, sizeof(unsigned char));
         originR[i] = c;
+        drawingR[i] = c;
     }
 
     bmpFile.seekg(0, std::ios::beg);
@@ -31,6 +37,7 @@ BMPStorer::~BMPStorer() {
     delete[] originR;
     delete[] originG;
     delete[] originB;
+
 }
 
 void BMPStorer::setSize(

@@ -172,22 +172,30 @@ bool JigsawPuzzle::feasibilityAnalysis() const {
 }
 
 std::deque<char> JigsawPuzzle::autoFinish() {
+    // 这里采用了深度优先的搜索算法
+    // 记录下初始状态
     int * originState = new int[row * col];
     for (int i = 0; i < row * col; i++) {
         originState[i] = matrix[i];
     }
     int br = curBlankRow;
     int bc = curBlankCol;
+    // 候选栈
     std::deque<char> waiting;
+    // 最终路径
     std::deque<char> path;
+    // 用于记录当前状态是否已经搜索过
     std::set<long long> exploitedStates;
+    // 上一步是否移动过
     bool moved = true;
+    // 记录初始状态的hash
     exploitedStates.insert(hash());
     char c;
     do {
         if (isFinished()) {
             break;
         }
+        // 如果上一次循环移动过，尝试4个方向并入栈
         if (moved) {
             int score[4] = { -1,-1,-1,-1 };
             bool canmove = false;
@@ -219,6 +227,7 @@ std::deque<char> JigsawPuzzle::autoFinish() {
                 }
                 move('A');
             }
+            // 按照“距离”进行排序，距离近的优先处理
             for (int i = 0; i < 4 && canmove; i++) {
                 int max = -1;
                 int index = 0;
@@ -242,6 +251,7 @@ std::deque<char> JigsawPuzzle::autoFinish() {
                 }
                 score[index] = -1;
             }
+            // 如果本次不能移动，返回上一步
             if (!canmove) {
                 c = path.back();
                 path.pop_back();
@@ -254,10 +264,12 @@ std::deque<char> JigsawPuzzle::autoFinish() {
         c = waiting.back();
         waiting.pop_back();
         move(c);
+        // 这一状态已经搜索过，返回上一步
         if (exploitedStates.find(hash()) != exploitedStates.end()) {
             moveBack(c);
             moved = false;
         }
+        // 沿当前状态继续搜索
         else {
             moved = true; 
             path.push_back(c);
@@ -265,6 +277,7 @@ std::deque<char> JigsawPuzzle::autoFinish() {
         }
     } while (!waiting.empty());
 
+    // 返回初始状态
     for (int i = 0; i < row * col; i++) {
         matrix[i] = originState[i];
     }
@@ -286,6 +299,7 @@ const int JigsawPuzzle::getCol() const {
 }
 
 long long JigsawPuzzle::hash() const {
+    // 用row * col进制表示当前棋盘状态
     long long base = row * col;
     long long result = 0;
     for (int i = 0; i < row * col; i++) {
@@ -295,6 +309,7 @@ long long JigsawPuzzle::hash() const {
 }
 
 int JigsawPuzzle::distance() const {
+    // 当前位置与目标位置x, y坐标差的绝对值之和
     int d = 0;
     for (int i = 0; i < row * col; i++) {
         int r = i / row;
