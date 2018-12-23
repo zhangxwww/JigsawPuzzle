@@ -27,10 +27,26 @@ void Printer::printText(const std::string & text) {
     std::cout << text << std::endl;
 }
 
+void Printer::printPath(std::deque<char> path) {
+    clearText();
+    while (!path.empty()) {
+        for (int i = 0; i < 60; i++) {
+            if (path.empty()) {
+                break;
+            }
+            char c = path.front();
+            path.pop_front();
+            std::cout << c;
+        }
+        std::cout << std::endl;
+    }
+}
+
 void Printer::clearText() {
+    int curRow = getCurRow();
     setCurRow(row);
-    for (int i = 0; i < 25; i++) {
-        std::cout << "                                                        "
+    for (int i = row; i < curRow; i++) {
+        std::cout << "                                                            "
             << std::endl;
     }  
     setCurRow(row);

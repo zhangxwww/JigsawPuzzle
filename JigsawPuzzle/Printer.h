@@ -2,6 +2,7 @@
 #define PRINTER
 
 #include <string>
+#include <deque>
 
 /* 用于屏幕上信息的打印 */
 class Printer {
@@ -21,6 +22,13 @@ public:
      * @param text: 待打印的文字
      */
     void printText(const std::string & text);
+
+
+    /**
+     * 在矩阵下方打印自动完成的步骤
+     * @param path: 待打印的步骤
+     */
+    void printPath(std::deque<char> path);
 
 
     /**

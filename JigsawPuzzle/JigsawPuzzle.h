@@ -1,6 +1,8 @@
 #ifndef JIGSAW_PUZZLE
 #define JIGSAW_PUZZLE
 
+#include <deque>
+
 class Archive;
 
 /* 拼图 */
@@ -54,8 +56,9 @@ public:
 
     /**
      * 自动完成
+     * @return: 路径构成的deque
      */
-    void autoFinish();
+    std::deque<char> autoFinish();
     
     
     int * getMatrix() const;

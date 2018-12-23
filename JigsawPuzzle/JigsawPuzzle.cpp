@@ -5,7 +5,6 @@
 #include <iostream>
 #include <random>
 #include <ctime>
-#include <deque>
 #include <set>
 #include <cmath>
 
@@ -172,11 +171,13 @@ bool JigsawPuzzle::feasibilityAnalysis() const {
     }
 }
 
-void JigsawPuzzle::autoFinish() {
+std::deque<char> JigsawPuzzle::autoFinish() {
     int * originState = new int[row * col];
     for (int i = 0; i < row * col; i++) {
         originState[i] = matrix[i];
     }
+    int br = curBlankRow;
+    int bc = curBlankCol;
     std::deque<char> waiting;
     std::deque<char> path;
     std::set<long long> exploitedStates;
@@ -263,10 +264,13 @@ void JigsawPuzzle::autoFinish() {
             exploitedStates.insert(hash());
         }
     } while (!waiting.empty());
+
     for (int i = 0; i < row * col; i++) {
         matrix[i] = originState[i];
     }
-    return;
+    curBlankRow = br;
+    curBlankCol = bc;
+    return path;
 }
 
 int * JigsawPuzzle::getMatrix() const {

@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <deque>
 #include <cstdio>
 #include <conio.h>
 
@@ -44,7 +45,7 @@ void GameController::start() {
     // 打印游戏介绍
     printIntroduction();
     // 输入图片路径
-    //getBMPfileName();
+    getBMPfileName();
     // 设置难度
     setDifficulty();
     printer = new Printer(puzzle->getRow(), puzzle->getCol());
@@ -56,6 +57,7 @@ void GameController::start() {
 
 void GameController::mainLoop() {
     // 绘制矩阵，清空矩阵下的文字
+    printer->clearText();
     printer->printMatrix(puzzle->getMatrix());
     printer->clearText();
     // 检查是否有解
@@ -81,6 +83,8 @@ void GameController::mainLoop() {
                 // move
                 puzzle->move(cmd);
                 printer->clearText();
+                // print  
+                printer->printMatrix(puzzle->getMatrix());
                 // 判断是否完成复原
                 if (puzzle->isFinished()) {
                     printer->printText(FINISH);
@@ -95,6 +99,8 @@ void GameController::mainLoop() {
                     checkSolvable();
                 }
                 puzzle->restart();
+                // print  
+                printer->printMatrix(puzzle->getMatrix());
                 break;
             case 'G':
                 // save image
@@ -110,7 +116,7 @@ void GameController::mainLoop() {
                 break;
             case 'F':
                 // auto finish
-                puzzle->autoFinish();
+                printer->printPath(puzzle->autoFinish());
                 break;
             case 'P':
                 // exit
@@ -119,8 +125,7 @@ void GameController::mainLoop() {
             default:
                 break;
             }
-            // print  
-            printer->printMatrix(puzzle->getMatrix());
+            
         }
     }
 }
@@ -166,7 +171,7 @@ void GameController::getBMPfileName() {
         }
         std::cout << "File not found, please try again." << std::endl;
     }
-    //storer = new BMPStorer(bmpFile);
+    storer = new BMPStorer(bmpFile);
     bmpFile.close();
 }
 
@@ -182,9 +187,9 @@ void GameController::saveBMPfile() {
         }
         std::cout << "Can't save the image, please try again." << std::endl;
     }
-    //storer->refactor(puzzle->getMatrix());
-    //storer->drawBounds();
-    //storer->save(bmpFile);
+    storer->refactor(puzzle->getMatrix());
+    storer->drawBounds();
+    storer->save(bmpFile);
     bmpFile.close();
 }
 
@@ -205,7 +210,7 @@ void GameController::setDifficulty() {
         break;
     }
     puzzle = new JigsawPuzzle(row, col);
-    //storer->setSize(row, col);
+    storer->setSize(row, col);
 }
 
 void GameController::save() {
@@ -259,10 +264,10 @@ void GameController::load() {
 
 const int GameController::ARCHIVES_MAX = 5;
 
-const std::string GameController::FINISH = "Finish! Press R to play again.";
-const std::string GameController::SOLVABLE = "Able to solve!";
-const std::string GameController::UNSOLVABLE = "No solution! Press any key to restart.";
-const std::string GameController::ENTER_ARCHIVE_NAME = "Please enter the name: ";
-const std::string GameController::SAVED = "Saved successfully!";
-const std::string GameController::ARCHIVE_NOT_FOUND = "Archive not found. Please check your name.";
-const std::string GameController::NAME_USED = "This name has already been used.";
+const std::string GameController::FINISH             = "Finish! Press R to play again.            ";
+const std::string GameController::SOLVABLE           = "Able to solve!                            ";
+const std::string GameController::UNSOLVABLE         = "No solution! Press any key to restart.    ";
+const std::string GameController::ENTER_ARCHIVE_NAME = "Please enter the name:                    ";
+const std::string GameController::SAVED              = "Saved successfully!                       ";
+const std::string GameController::ARCHIVE_NOT_FOUND  = "Archive not found. Please check your name.";
+const std::string GameController::NAME_USED          = "This name has already been used.          ";

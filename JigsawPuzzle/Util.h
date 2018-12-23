@@ -22,4 +22,11 @@ void swap(T & t1, T & t2) {
  */
 void setCurRow(const int row);
 
+
+/**
+ * 获取windows下cmd窗口中光标所在的行数
+ * @return: 光标所在行
+ */
+int getCurRow();
+
 #endif // !UTIL
