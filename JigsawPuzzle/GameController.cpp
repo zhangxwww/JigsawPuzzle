@@ -113,6 +113,8 @@ void GameController::mainLoop() {
             case 'O':
                 // load
                 load();
+                // print  
+                printer->printMatrix(puzzle->getMatrix());
                 break;
             case 'F':
                 // auto finish

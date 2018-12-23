@@ -45,13 +45,18 @@ private:
     int col;
 
     /* 图像的宽、高 */
-    int width;
-    int height;
+    int originWidth;
+    int originHeight;
+    int drawingWidth;
+    int drawingHeight;
 
     /* 三个颜色通道 */
-    unsigned int * B;
-    unsigned int * G;
-    unsigned int * R;
+    unsigned int * originB;
+    unsigned int * originG;
+    unsigned int * originR;
+    unsigned int * drawingB;
+    unsigned int * drawingG;
+    unsigned int * drawingR;
 };
 
 #endif // !BMP_STORER

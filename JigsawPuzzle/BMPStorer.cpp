@@ -6,21 +6,21 @@ BMPStorer::BMPStorer(
     std::ifstream & bmpFile) {
 
     bmpFile.seekg(18, std::ios::beg);
-    bmpFile.read((char *)& width, sizeof(int));
-    bmpFile.read((char *)& height, sizeof(int));
-    B = new unsigned int[width * height];
-    G = new unsigned int[width * height];
-    R = new unsigned int[width * height];
+    bmpFile.read((char *)& originWidth, sizeof(int));
+    bmpFile.read((char *)& originHeight, sizeof(int));
+    originB = new unsigned int[originWidth * originHeight];
+    originG = new unsigned int[originWidth * originHeight];
+    originR = new unsigned int[originWidth * originHeight];
 
     bmpFile.seekg(54, std::ios::beg);
     unsigned char c;
-    for (int i = 0; i < width * height; i++) {
+    for (int i = 0; i < originWidth * originHeight; i++) {
         bmpFile.read((char *)& c, sizeof(unsigned char));
-        B[i] = c;
+        originB[i] = c;
         bmpFile.read((char *)& c, sizeof(unsigned char));
-        G[i] = c;
+        originG[i] = c;
         bmpFile.read((char *)& c, sizeof(unsigned char));
-        R[i] = c;
+        originR[i] = c;
     }
 
     bmpFile.seekg(0, std::ios::beg);
@@ -28,9 +28,9 @@ BMPStorer::BMPStorer(
 }
 
 BMPStorer::~BMPStorer() {
-    delete[] R;
-    delete[] G;
-    delete[] B;
+    delete[] originR;
+    delete[] originG;
+    delete[] originB;
 }
 
 void BMPStorer::setSize(
@@ -41,17 +41,17 @@ void BMPStorer::setSize(
 }
 
 void BMPStorer::refactor(int * matrix) {
-    unsigned int * nB = new unsigned int[width * height];
-    unsigned int * nG = new unsigned int[width * height];
-    unsigned int * nR = new unsigned int[width * height];
-    for (int i = 0; i < width * height; i++) {
+    unsigned int * nB = new unsigned int[originWidth * originHeight];
+    unsigned int * nG = new unsigned int[originWidth * originHeight];
+    unsigned int * nR = new unsigned int[originWidth * originHeight];
+    for (int i = 0; i < originWidth * originHeight; i++) {
         nB[i] = 0;
         nG[i] = 0;
         nR[i] = 0;
     }
     // 块的宽、高
-    int deltaWidth = width / col;
-    int deltaHeight = height / row;
+    int deltaWidth = originWidth / col;
+    int deltaHeight = originHeight / row;
     // 新的图像的宽、高
     int newWidth = deltaWidth * col;
     int newHeight = deltaHeight * row;
@@ -73,42 +73,42 @@ void BMPStorer::refactor(int * matrix) {
             for (int y = 0; y < deltaHeight; y++) {
                 for (int x = 0; x < deltaWidth; x++) {
                     nB[x + newLeftDownPixX + (y + newLeftDownPixY) * newWidth]
-                        = B[x + preLeftDownPixX + (y + preLeftDownPixY) * newWidth];
+                        = originB[x + preLeftDownPixX + (y + preLeftDownPixY) * newWidth];
                     nG[x + newLeftDownPixX + (y + newLeftDownPixY) * newWidth]
-                        = G[x + preLeftDownPixX + (y + preLeftDownPixY) * newWidth];
+                        = originG[x + preLeftDownPixX + (y + preLeftDownPixY) * newWidth];
                     nR[x + newLeftDownPixX + (y + newLeftDownPixY) * newWidth]
-                        = R[x + preLeftDownPixX + (y + preLeftDownPixY) * newWidth];
+                        = originR[x + preLeftDownPixX + (y + preLeftDownPixY) * newWidth];
                 }
             }
         }
     }
-    width = newWidth;
-    height = newHeight;
-    delete[] B;
-    delete[] G;
-    delete[] R;
-    B = nB;
-    G = nG;
-    R = nR;
+    drawingWidth = newWidth;
+    drawingHeight = newHeight;
+    delete[] drawingB;
+    delete[] drawingG;
+    delete[] drawingR;
+    drawingB = nB;
+    drawingG = nG;
+    drawingR = nR;
 }
 
 void BMPStorer::drawBounds() {
-    int deltaWidth = width / col;
-    int deltaHeight = height / row;
+    int deltaWidth = drawingWidth / col;
+    int deltaHeight = drawingHeight / row;
     // 绘制所有竖线
     for (int c = 1; c < col; c++) {
-        for (int y = 0; y < height; y++) {
-            B[y * width + c * deltaWidth] = 0;
-            G[y * width + c * deltaWidth] = 0;
-            R[y * width + c * deltaWidth] = 0;
+        for (int y = 0; y < drawingHeight; y++) {
+            drawingB[y * originWidth + c * deltaWidth] = 0;
+            drawingG[y * originWidth + c * deltaWidth] = 0;
+            drawingR[y * originWidth + c * deltaWidth] = 0;
         }
     }
     // 绘制所有横线
     for (int r = 1; r < row; r++) {
-        for (int x = 0; x < width; x++) {
-            B[r * deltaHeight * width + x] = 0;
-            G[r * deltaHeight * width + x] = 0;
-            R[r * deltaHeight * width + x] = 0;
+        for (int x = 0; x < drawingWidth; x++) {
+            drawingB[r * deltaHeight * originWidth + x] = 0;
+            drawingG[r * deltaHeight * originWidth + x] = 0;
+            drawingR[r * deltaHeight * originWidth + x] = 0;
         }
     }
 }
@@ -116,16 +116,16 @@ void BMPStorer::drawBounds() {
 void BMPStorer::save(std::ofstream & bmpFile) {
     bmpFile.write(header, 54 * sizeof(char));
     bmpFile.seekp(18, std::ios::beg);
-    bmpFile.write((char *)& width, sizeof(int));
-    bmpFile.write((char *)& height, sizeof(int));
+    bmpFile.write((char *)& drawingWidth, sizeof(int));
+    bmpFile.write((char *)& drawingHeight, sizeof(int));
     bmpFile.seekp(54, std::ios::beg);
     unsigned char c;
-    for (int i = 0; i < width * height; i++) {
-        c = B[i];
+    for (int i = 0; i < drawingWidth * drawingHeight; i++) {
+        c = drawingB[i];
         bmpFile.write((char *)(&c), sizeof(unsigned char));
-        c = G[i];
+        c = drawingG[i];
         bmpFile.write((char *)(&c), sizeof(unsigned char));
-        c = R[i];
+        c = drawingR[i];
         bmpFile.write((char *)(&c), sizeof(unsigned char));
     }
 }
