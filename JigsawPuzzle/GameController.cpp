@@ -193,6 +193,7 @@ void GameController::saveBMPfile() {
     storer->drawBounds();
     storer->save(bmpFile);
     bmpFile.close();
+    printer->printText(SAVED);
 }
 
 void GameController::setDifficulty() {
@@ -261,6 +262,9 @@ void GameController::load() {
     }
     if (!found) {
         printer->printText(ARCHIVE_NOT_FOUND);
+    }
+    else {
+        printer->clearText();
     }
 }
 
