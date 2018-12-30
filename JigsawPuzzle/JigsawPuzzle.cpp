@@ -26,23 +26,6 @@ JigsawPuzzle::JigsawPuzzle(
 
 }
 
-JigsawPuzzle::JigsawPuzzle(const Archive & archive)
-    : row(archive.row), col(archive.col), matrix(nullptr),
-    originMatrix(nullptr), curBlankRow(0), curBlankCol(0) {
-
-    matrix = new int[row * col];
-    originMatrix = new int[row * col];
-
-    for (int i = 0; i < row * col; i++) {
-        matrix[i] = archive.matrix[i];
-        originMatrix[i] = archive.matrix[i];
-        if (matrix[i] == -1) {
-            curBlankRow = i / col;
-            curBlankCol = i % col;
-        }
-    }
-}
-
 JigsawPuzzle::~JigsawPuzzle() {
     if (matrix != nullptr) {
         delete[] matrix;
@@ -168,6 +151,16 @@ bool JigsawPuzzle::feasibilityAnalysis() const {
     }
     else {
         return false;
+    }
+}
+
+void JigsawPuzzle::loadArchive(const Archive & archive) {
+    for (int i = 0; i < row*col; i++) {
+        matrix[i] = archive.matrix[i];
+        if (matrix[i] == -1) {
+            curBlankRow = i / col;
+            curBlankCol = i % col;
+        }
     }
 }
 
@@ -323,5 +316,3 @@ int JigsawPuzzle::distance() const {
     }
     return d;
 }
-
-

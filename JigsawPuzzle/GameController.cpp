@@ -251,11 +251,7 @@ void GameController::load() {
         if (archives[i] != nullptr 
             && archives[i]->name == name) {
 
-            if (puzzle != nullptr) {
-                delete puzzle;
-                puzzle = nullptr;
-            }
-            puzzle = new JigsawPuzzle(*archives[i]);
+            puzzle->loadArchive(*archives[i]);
             found = true;
             break;
         }

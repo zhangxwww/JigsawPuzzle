@@ -9,7 +9,6 @@ class Archive;
 class JigsawPuzzle {
 public:
     JigsawPuzzle(const int row, const int col);
-    JigsawPuzzle(const Archive & archive);
     ~JigsawPuzzle();
 
 
@@ -30,6 +29,7 @@ public:
     /**
      * 反向移动
      * @param c: 移动方向
+     * @return : 成功移动则返回true, 否则false
      */
     bool moveBack(const char c);
 
@@ -53,6 +53,12 @@ public:
      */
     bool feasibilityAnalysis() const;
 
+
+    /**
+     * 读档
+     * @param archive: 存档
+     */
+    void loadArchive(const Archive & archive);
 
     /**
      * 自动完成
